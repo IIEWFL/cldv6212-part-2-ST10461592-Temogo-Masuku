@@ -111,7 +111,7 @@ namespace ABC_Retail.Services
                 throw new ArgumentException(validationResult.ErrorMessage);
             }
 
-            // Check email uniqueness (excluding current customer)
+            // Check email uniqueness
             if (!await IsEmailUniqueAsync(customer.Email!, customer.PartitionKey, customer.RowKey))
             {
                 throw new ArgumentException("Email address already exists");

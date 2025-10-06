@@ -100,9 +100,6 @@ namespace ABC_Retail.Services
                     log.InsertionTime.HasValue &&
                     log.InsertionTime.Value < cutoffDate);
 
-                // Note: Azure Queue Storage doesn't support selective deletion of messages
-                // This would require a more sophisticated implementation with Table Storage
-                // For now, we'll just return the count of logs that would be deleted
                 var oldLogCount = oldLogs.Count();
 
                 // Log the cleanup operation

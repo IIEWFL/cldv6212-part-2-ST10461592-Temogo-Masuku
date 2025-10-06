@@ -21,7 +21,7 @@ namespace ABCRetailFunctions.Models
         public string ProductName { get; set; } = string.Empty;
         public string? Description { get; set; }
         public double Price { get; set; }
-        public string? ProductPhotoUrl { get; set; }  // Product image
+        public string? ProductPhotoUrl { get; set; }  
         public string? Category { get; set; }
     }
 }

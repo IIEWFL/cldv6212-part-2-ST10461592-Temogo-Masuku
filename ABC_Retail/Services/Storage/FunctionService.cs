@@ -12,7 +12,7 @@ namespace ABC_Retail.Services.Storage
         public FunctionService(HttpClient httpClient, IConfiguration configuration)
         {
             _httpClient = httpClient;
-            _functionBaseUrl = configuration["AzureFunctionsBaseUrl"] ?? throw new InvalidOperationException("Azure Functions Base URL is missing");
+            _functionBaseUrl = configuration["AzureFunctionsBaseUrlProd"] ?? throw new InvalidOperationException("Azure Functions Base URL is missing");
             _functionBaseUrl = _functionBaseUrl.TrimEnd('/');
         }
 

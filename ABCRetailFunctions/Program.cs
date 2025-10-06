@@ -11,7 +11,7 @@ var host = new HostBuilder()
         services.ConfigureFunctionsApplicationInsights();
 
         // Register storage services
-        var storageConnectionString = Environment.GetEnvironmentVariable("storageConnectionString")
+        var storageConnectionString = Environment.GetEnvironmentVariable("AzureWebJobsStorage")
             ?? throw new InvalidOperationException("storageConnectionString not found");
 
         services.AddSingleton(sp => new TableStorageService(storageConnectionString, "tables"));
