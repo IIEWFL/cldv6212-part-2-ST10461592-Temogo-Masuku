@@ -1,0 +1,205 @@
+﻿@model ABC_Retail.Models.AuditLog
+
+@{
+    ViewData["Title"] = "Audit Log Details";
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h1>Audit Log Details</h1>
+                <a asp-action="Index" class="btn btn-secondary">
+                    <i class="bi bi-arrow-left"></i> Back to List
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-8">
+            <!-- Message Content -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0">
+                        <i class="bi bi-file-text"></i> Message Content
+                    </h5>
+                </div>
+                <div class="card-body">
+                    @if (!string.IsNullOrEmpty(Model.MessageText))
+                    {
+                        <div class="message-content">
+                            <pre class="bg-light p-3 rounded" style="white-space: pre-wrap; word-wrap: break-word;">@Model.MessageText</pre>
+                        </div>
+
+                        <!-- Try to parse and display JSON in a formatted way -->
+                        @try
+                        {
+                            var jsonDoc = System.Text.Json.JsonDocument.Parse(Model.MessageText);
+                            <div class="mt-3">
+                                <h6>Formatted JSON:</h6>
+                                <pre class="bg-dark text-light p-3 rounded" style="white-space: pre-wrap;">@System.Text.Json.JsonSerializer.Serialize(jsonDoc, new System.Text.Json.JsonSerializerOptions { WriteIndented = true })</pre>
+                            </div>
+                        }
+                        catch
+                        {
+                            // Not valid JSON, skip formatting
+                        }
+                    }
+                    else
+                    {
+                        <div class="alert alert-warning">
+                            <i class="bi bi-exclamation-triangle"></i> No message content available
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <!-- Metadata -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h6 class="mb-0">
+                        <i class="bi bi-info-circle"></i> Metadata
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <div class="row mb-3">
+                        <div class="col-5">
+                            <strong>Message ID:</strong>
+                        </div>
+                        <div class="col-7">
+                            @if (!string.IsNullOrEmpty(Model.MessageId))
+                            {
+                                <code>@Model.MessageId</code>
+                            }
+                            else
+                            {
+                                <span class="text-muted">N/A</span>
+                            }
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col-5">
+                            <strong>Insertion Time:</strong>
+                        </div>
+                        <div class="col-7">
+                            @if (Model.InsertionTime.HasValue)
+                            {
+                                <div>
+                                    <span>@Model.InsertionTime.Value.ToString("yyyy-MM-dd")</span><br />
+                                    <span>@Model.InsertionTime.Value.ToString("HH:mm:ss")</span><br />
+                                    <small class="text-muted">@Model.InsertionTime.Value.ToString("ddd, MMM dd")</small>
+                                </div>
+                            }
+                            else
+                            {
+                                <span class="text-muted">N/A</span>
+                            }
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col-5">
+                            <strong>Message Size:</strong>
+                        </div>
+                        <div class="col-7">
+                            @if (!string.IsNullOrEmpty(Model.MessageText))
+                            {
+                                <span>@Model.MessageText.Length bytes</span>
+                            }
+                            else
+                            {
+                                <span class="text-muted">0 bytes</span>
+                            }
+                        </div>
+                    </div>
+
+                    @if (Model.InsertionTime.HasValue)
+                    {
+                        <div class="row mb-3">
+                            <div class="col-5">
+                                <strong>Age:</strong>
+                            </div>
+                            <div class="col-7">
+                                @{
+                                    var age = DateTime.UtcNow - Model.InsertionTime.Value;
+                                    if (age.TotalDays >= 1)
+                                    {
+                                        <span>@((int)age.TotalDays) days ago</span>
+                                    }
+                                    else if (age.TotalHours >= 1)
+                                    {
+                                        <span>@((int)age.TotalHours) hours ago</span>
+                                    }
+                                    else if (age.TotalMinutes >= 1)
+                                    {
+                                        <span>@((int)age.TotalMinutes) minutes ago</span>
+                                    }
+                                    else
+                                    {
+                                        <span>Just now</span>
+                                    }
+                                }
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+
+            <!-- Actions -->
+            <div class="card">
+                <div class="card-header">
+                    <h6 class="mb-0">
+                        <i class="bi bi-gear"></i> Actions
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <div class="d-grid gap-2">
+                        <button class="btn btn-outline-primary" onclick="copyToClipboard()">
+                            <i class="bi bi-clipboard"></i> Copy Message
+                        </button>
+
+                        @if (!string.IsNullOrEmpty(Model.MessageText))
+                        {
+                            <a href="data:text/plain;charset=utf-8,@Uri.EscapeDataString(Model.MessageText)"
+                               download="audit_log_@(Model.MessageId ?? "unknown").txt"
+                               class="btn btn-outline-success">
+                                <i class="bi bi-download"></i> Download
+                            </a>
+                        }
+
+                        <a asp-action="Index" class="btn btn-secondary">
+                            <i class="bi bi-arrow-left"></i> Back to List
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function copyToClipboard() {
+        const messageText = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.MessageText ?? ""));
+        navigator.clipboard.writeText(messageText).then(function() {
+            // Show success message
+            const btn = event.target;
+            const originalText = btn.innerHTML;
+            btn.innerHTML = '<i class="bi bi-check"></i> Copied!';
+            btn.classList.remove('btn-outline-primary');
+            btn.classList.add('btn-success');
+
+            setTimeout(function() {
+                btn.innerHTML = originalText;
+                btn.classList.remove('btn-success');
+                btn.classList.add('btn-outline-primary');
+            }, 2000);
+        }).catch(function(err) {
+            console.error('Failed to copy: ', err);
+            alert('Failed to copy to clipboard');
+        });
+    }
+</script>

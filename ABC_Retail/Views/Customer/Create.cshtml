@@ -1,0 +1,86 @@
+﻿@model ABC_Retail.Models.Customer
+<h1>Add New Customer</h1>
+
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        <i class="bi bi-check-circle-fill me-2"></i>
+        @TempData["Success"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <i class="bi bi-exclamation-triangle-fill me-2"></i>
+        @TempData["Error"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create" method="post" enctype="multipart/form-data">
+            <div class="form-group mb-3">
+                <label class="control-label">Customer Photo</label>
+                <input type="file" name="photoFile" class="form-control" accept="image/*" />
+                @if (!string.IsNullOrEmpty(Model.CustomerPhotoUrl))
+                {
+                    <img src="@Model.CustomerPhotoUrl" class="mt-2" style="width:100px;height:100px;object-fit:cover;" />
+                }
+            </div>
+
+            @* Fields *@
+            <div class="form-group mb-3">
+                <label asp-for="Name"></label>
+                <input asp-for="Name" class="form-control" required />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+            <div class="form-group mb-3">
+                <label asp-for="Surname"></label>
+                <input asp-for="Surname" class="form-control" required />
+                <span asp-validation-for="Surname" class="text-danger"></span>
+            </div>
+            <div class="form-group mb-3">
+                <label asp-for="Email"></label>
+                <input asp-for="Email" class="form-control" required />
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+
+            @* Address Fields *@
+            <div class="form-group mb-3">
+                <label asp-for="PhoneNumber"></label>
+                <input asp-for="PhoneNumber" class="form-control" />
+                <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+            </div>
+            <div class="form-group mb-3">
+                <label asp-for="StreetAddress"></label>
+                <input asp-for="StreetAddress" class="form-control" />
+                <span asp-validation-for="StreetAddress" class="text-danger"></span>
+            </div>
+            <div class="form-group mb-3">
+                <label asp-for="City"></label>
+                <input asp-for="City" class="form-control" />
+                <span asp-validation-for="City" class="text-danger"></span>
+            </div>
+            <div class="form-group mb-3">
+                <label asp-for="Province"></label>
+                <input asp-for="Province" class="form-control" />
+                <span asp-validation-for="Province" class="text-danger"></span>
+            </div>
+            <div class="form-group mb-3">
+                <label asp-for="PostalCode"></label>
+                <input asp-for="PostalCode" class="form-control" />
+                <span asp-validation-for="PostalCode" class="text-danger"></span>
+            </div>
+            <div class="form-group mb-3">
+                <label asp-for="Country"></label>
+                <input asp-for="Country" class="form-control" value="South Africa" />
+                <span asp-validation-for="Country" class="text-danger"></span>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Create Customer</button>
+        </form>
+    </div>
+</div>

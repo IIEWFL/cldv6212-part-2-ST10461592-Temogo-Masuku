@@ -1,0 +1,51 @@
+﻿@{
+    ViewData["Title"] = "Home";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Welcome to ABC Retail</h1>
+    <p class="lead">Manage your retail operations with Azure Cloud Services</p>
+</div>
+
+<div class="row mt-5">
+    <div class="col-md-3">
+        <div class="card">
+            <div class="card-body text-center">
+                <i class="bi bi-people-fill" style="font-size: 3rem;"></i>
+                <h5 class="card-title mt-3">Customers</h5>
+                <p class="card-text">Manage customer profiles stored in Azure Table Storage</p>
+                <a asp-controller="Customer" asp-action="Index" class="btn btn-primary">View Customers</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card">
+            <div class="card-body text-center">
+                <i class="bi bi-box-seam" style="font-size: 3rem;"></i>
+                <h5 class="card-title mt-3">Products</h5>
+                <p class="card-text">Manage products with Azure Blob Storage for images</p>
+                <a asp-controller="Product" asp-action="Index" class="btn btn-primary">View Products</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card">
+            <div class="card-body text-center">
+                <i class="bi bi-cart-fill" style="font-size: 3rem;"></i>
+                <h5 class="card-title mt-3">Orders</h5>
+                <p class="card-text">Track orders stored in Azure Table Storage</p>
+                <a asp-controller="Order" asp-action="Index" class="btn btn-primary">View Orders</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card">
+            <div class="card-body text-center">
+                <i class="bi bi-file-earmark-text" style="font-size: 3rem;"></i>
+                <h5 class="card-title mt-3">Contracts</h5>
+                <p class="card-text">Store contracts in Azure File Share</p>
+                <a asp-controller="Contract" asp-action="Index" class="btn btn-primary">View Contracts</a>
+            </div>
+        </div>
+    </div>
+</div>

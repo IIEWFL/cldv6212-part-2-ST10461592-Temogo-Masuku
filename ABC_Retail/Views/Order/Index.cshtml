@@ -1,0 +1,84 @@
+﻿@model IEnumerable<ABC_Retail.Models.Order>
+@{
+    ViewData["Title"] = "Orders";
+}
+<h1>Orders</h1>
+<p>
+    <a asp-action="Create" class="btn btn-primary">Add New Order</a>
+</p>
+
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        <i class="bi bi-check-circle-fill me-2"></i>
+        @TempData["Success"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <i class="bi bi-exclamation-triangle-fill me-2"></i>
+        @TempData["Error"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+
+@if (Model != null && Model.Any())
+{
+    <div class="table-responsive">
+        <table class="table table-striped">
+            <thead class="table-dark">
+                <tr>
+                    <th>Partition Key</th>
+                    <th>Row Key</th>
+                    <th>Timestamp</th>
+                    <th>Customer</th>
+                    <th>Product</th>
+                    <th>Quantity</th>
+                    <th>Order Date</th>
+                    <th>Total Amount</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>@Html.DisplayFor(modelItem => item.PartitionKey)</td>
+                        <td>@Html.DisplayFor(modelItem => item.RowKey)</td>
+                        <td>@Html.DisplayFor(modelItem => item.Timestamp)</td>
+                        <td>@Html.DisplayFor(modelItem => item.CustomerPartitionKey) / @Html.DisplayFor(modelItem => item.CustomerRowKey)</td>
+                        <td>@Html.DisplayFor(modelItem => item.ProductPartitionKey) / @Html.DisplayFor(modelItem => item.ProductRowKey)</td>
+                        <td>@Html.DisplayFor(modelItem => item.Quantity)</td>
+                        <td>@Html.DisplayFor(modelItem => item.OrderDate)</td>
+                        <td>R@item.TotalAmount.ToString("F2")</td>
+                        <td>
+                            <span class="badge @(item.OrderStatus == "Delivered" ? "bg-success" :
+                                                                                   item.OrderStatus == "Pending" ? "bg-warning" :
+                                                                                   item.OrderStatus == "Cancelled" ? "bg-danger" :
+                                                                                   item.OrderStatus == "Processing" ? "bg-info" : "bg-secondary")">
+                        @Html.DisplayFor(modelItem => item.OrderStatus)
+                    </span>
+                </td>
+                <td>
+                    <a asp-action="Edit" asp-route-partitionKey="@item.PartitionKey" asp-route-rowKey="@item.RowKey" class="btn btn-sm btn-outline-primary">Edit</a>
+                    <a asp-action="Details" asp-route-partitionKey="@item.PartitionKey" asp-route-rowKey="@item.RowKey" class="btn btn-sm btn-outline-info">Details</a>
+                    <a asp-action="UpdateStatus" asp-route-partitionKey="@item.PartitionKey" asp-route-rowKey="@item.RowKey" class="btn btn-sm btn-outline-warning">Status</a>
+                    <a asp-action="Delete" asp-route-partitionKey="@item.PartitionKey" asp-route-rowKey="@item.RowKey" class="btn btn-sm btn-outline-danger">Delete</a>
+                </td>
+            </tr>
+                        }
+            </tbody>
+        </table>
+    </div>
+}
+else
+{
+    <div class="alert alert-info" role="alert">
+        <h4 class="alert-heading">No orders found!</h4>
+        <p>You haven't added any orders yet. Click the "Add New Order" button above to get started.</p>
+    </div>
+}

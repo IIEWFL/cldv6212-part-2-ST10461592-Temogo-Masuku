@@ -1,0 +1,98 @@
+﻿@model ABC_Retail.Models.Order
+@{
+    ViewData["Title"] = "Create Order";
+}
+<h1>Create New Order</h1>
+
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        <i class="bi bi-check-circle-fill me-2"></i>
+        @TempData["Success"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <i class="bi bi-exclamation-triangle-fill me-2"></i>
+        @TempData["Error"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+
+<hr />
+<div class="row">
+    <div class="col-md-8">
+        <form asp-action="Create" method="post">
+            @Html.AntiForgeryToken()
+            <div asp-validation-summary="All" class="text-danger mb-3"></div>
+
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <label for="CustomerPartitionKey" class="form-label">Customer <span class="text-danger">*</span></label>
+                    <select name="CustomerPartitionKey" id="CustomerPartitionKey" class="form-select" required>
+                        <option value="">-- Select Customer --</option>
+                        @if (ViewBag.CustomerList != null)
+                        {
+                            @foreach (var item in ViewBag.CustomerList)
+                            {
+                                <option value="@item.Value" selected="@(Model.CustomerPartitionKey == item.Value ? "selected" : null)">@item.Text</option>
+                            }
+                        }
+                    </select>
+                </div>
+                <div class="col-md-6">
+                    <label for="ProductPartitionKey" class="form-label">Product <span class="text-danger">*</span></label>
+                    <select name="ProductPartitionKey" id="ProductPartitionKey" class="form-select" required>
+                        <option value="">-- Select Product --</option>
+                        @if (ViewBag.ProductList != null)
+                        {
+                            @foreach (var item in ViewBag.ProductList)
+                            {
+                                <option value="@item.Value" selected="@(Model.ProductPartitionKey == item.Value ? "selected" : null)">@item.Text</option>
+                            }
+                        }
+                    </select>
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <div class="col-md-4">
+                    <label asp-for="Quantity" class="form-label">Quantity <span class="text-danger">*</span></label>
+                    <input asp-for="Quantity" class="form-control" type="number" min="1" value="1" required />
+                    <span asp-validation-for="Quantity" class="text-danger"></span>
+                </div>
+                <div class="col-md-4">
+                    <label asp-for="OrderDate" class="form-label">Order Date <span class="text-danger">*</span></label>
+                    <input asp-for="OrderDate" class="form-control" type="datetime-local" required
+                           value="@DateTime.Now.ToString("yyyy-MM-ddTHH:mm")" />
+                    <span asp-validation-for="OrderDate" class="text-danger"></span>
+                </div>
+            </div>
+
+            <div class="mb-3">
+                <input type="submit" value="Create Order" class="btn btn-primary" />
+                <a asp-action="Index" class="btn btn-secondary">Back to List</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    <script>
+        // Set default order date to current date/time
+        document.addEventListener('DOMContentLoaded', function() {
+            var orderDateInput = document.querySelector('input[name="OrderDate"]');
+            if (orderDateInput && !orderDateInput.value) {
+                var now = new Date();
+                now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
+                orderDateInput.value = now.toISOString().slice(0, 16);
+            }
+        });
+    </script>
+}

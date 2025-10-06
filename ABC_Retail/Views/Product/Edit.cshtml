@@ -1,0 +1,88 @@
+﻿@model ABC_Retail.Models.Product
+
+@{
+    ViewData["Title"] = "Edit Product";
+}
+
+<h1>Edit Product</h1>
+
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        <i class="bi bi-check-circle-fill me-2"></i>
+        @TempData["Success"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <i class="bi bi-exclamation-triangle-fill me-2"></i>
+        @TempData["Error"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+
+<form asp-action="Edit" method="post" enctype="multipart/form-data" class="row g-3">
+    <!-- Required for Azure Table Storage -->
+    <input type="hidden" asp-for="RowKey" />
+    <input type="hidden" asp-for="PartitionKey" />
+
+    <div class="col-md-6">
+        <label asp-for="ProductName" class="form-label"></label>
+        <input asp-for="ProductName" class="form-control" />
+        <span asp-validation-for="ProductName" class="text-danger"></span>
+    </div>
+
+    <div class="col-md-6">
+        <label asp-for="Category" class="form-label"></label>
+        <input asp-for="Category" class="form-control" />
+        <span asp-validation-for="Category" class="text-danger"></span>
+    </div>
+
+    <div class="col-12">
+        <label asp-for="Description" class="form-label"></label>
+        <textarea asp-for="Description" class="form-control"></textarea>
+        <span asp-validation-for="Description" class="text-danger"></span>
+    </div>
+
+    <div class="col-md-6">
+        <label asp-for="Price" class="form-label"></label>
+        <input asp-for="Price" class="form-control" type="number" step="0.01" />
+        <span asp-validation-for="Price" class="text-danger"></span>
+    </div>
+
+    <!-- Current Photo -->
+    <div class="col-md-6">
+        <label class="form-label">Current Photo</label><br />
+        @if (!string.IsNullOrEmpty(Model.ProductPhotoUrl))
+        {
+            <img src="@Model.ProductPhotoUrl" alt="Product Photo" class="img-thumbnail mb-2" style="max-height:150px;" />
+        }
+        else
+        {
+            <p class="text-muted">No photo available</p>
+        }
+    </div>
+
+    <!-- Upload New Photo -->
+    <div class="col-md-6">
+        <label for="photoFile" class="form-label">Upload New Photo (optional)</label>
+        <input type="file" class="form-control" id="photoFile" name="photoFile" accept=".jpg,.jpeg,.png,.gif,.bmp" />
+    </div>
+
+    <!-- Hidden field to keep old photo if no new one is uploaded -->
+    <input type="hidden" asp-for="ProductPhotoUrl" />
+
+    <div class="col-12">
+        <button type="submit" class="btn btn-primary">Save</button>
+        <a asp-action="Index" class="btn btn-secondary">Back to List</a>
+    </div>
+</form>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

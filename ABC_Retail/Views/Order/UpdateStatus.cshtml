@@ -1,0 +1,65 @@
+﻿@model ABC_Retail.Models.Order
+@{
+    ViewData["Title"] = "Update Order Status";
+}
+<h1>Update Order Status</h1>
+
+<div class="card mb-4">
+    <div class="card-header">
+        <h4 class="mb-0">Order Information</h4>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-6">
+                <dl class="row">
+                    <dt class="col-sm-4">Order ID</dt>
+                    <dd class="col-sm-8">@Model.PartitionKey / @Model.RowKey</dd>
+                    <dt class="col-sm-4">Order Date</dt>
+                    <dd class="col-sm-8">@Html.DisplayFor(model => model.OrderDate)</dd>
+                    <dt class="col-sm-4">Current Status</dt>
+                    <dd class="col-sm-8">
+                        <span class="badge @(Model.OrderStatus == "Delivered" ? "bg-success" :
+                                                                           Model.OrderStatus == "Pending" ? "bg-warning" :
+                                                                           Model.OrderStatus == "Cancelled" ? "bg-danger" :
+                                                                           Model.OrderStatus == "Processing" ? "bg-info" : "bg-secondary")">
+                            @Model.OrderStatus
+                        </span>
+                    </dd>
+                </dl>
+            </div>
+            <div class="col-md-6">
+                <dl class="row">
+                    <dt class="col-sm-4">Quantity</dt>
+                    <dd class="col-sm-8">@Model.Quantity</dd>
+                    <dt class="col-sm-4">Total Amount</dt>
+                    <dd class="col-sm-8">R@Model.TotalAmount.ToString("F2")</dd>
+                </dl>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-header">
+        <h5 class="mb-0">Update Status</h5>
+    </div>
+    <div class="card-body">
+        <form asp-action="UpdateStatus" method="post">
+            @Html.AntiForgeryToken()
+            <input type="hidden" name="partitionKey" value="@Model.PartitionKey" />
+            <input type="hidden" name="rowKey" value="@Model.RowKey" />
+            <div class="row">
+                <div class="col-md-6">
+                    <label for="orderStatus" class="form-label">New Status</label>
+                    <select name="orderStatus" class="form-select" asp-items="ViewBag.StatusList">
+                        <option value="">-- Select New Status --</option>
+                    </select>
+                </div>
+                <div class="col-md-6 d-flex align-items-end">
+                    <button type="submit" class="btn btn-primary me-2">Update Status</button>
+                    <a asp-action="Index" class="btn btn-secondary">Cancel</a>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

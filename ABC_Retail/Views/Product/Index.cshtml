@@ -1,0 +1,61 @@
+﻿@model IEnumerable<ABC_Retail.Models.Product>
+
+@{
+    ViewData["Title"] = "Product List";
+}
+
+<h1>Products</h1>
+
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <i class="bi bi-check-circle-fill me-2"></i>
+            @TempData["Success"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <i class="bi bi-exclamation-triangle-fill me-2"></i>
+            @TempData["Error"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Product Name</th>
+            <th>Description</th>
+            <th>Price</th>
+            <th>Category</th>
+            <th>Photo</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var product in Model)
+        {
+            <tr>
+                <td>@product.ProductName</td>
+                <td>@product.Description</td>
+                <td>@product.Price.ToString("C")</td>
+                <td>@product.Category</td>
+                <td><img src="@product.ProductPhotoUrl" alt="Product Photo" style="width: 50px; height: auto;" /></td>
+                <td>
+                    <a class="btn btn-info" asp-action="Details" asp-route-partitionKey="@product.PartitionKey" asp-route-rowKey="@product.RowKey">Details</a>
+                    <a class="btn btn-warning" asp-action="Edit" asp-route-partitionKey="@product.PartitionKey" asp-route-rowKey="@product.RowKey">Edit</a>
+                    <form asp-action="Delete" asp-route-partitionKey="@product.PartitionKey" asp-route-rowKey="@product.RowKey" method="post" style="display:inline;" onsubmit="return confirm('Are you sure you want to delete this product?');">
+                        <button type="submit" class="btn btn-danger">Delete</button>
+                    </form>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<a class="btn btn-primary" asp-action="Create">Add New Product</a>

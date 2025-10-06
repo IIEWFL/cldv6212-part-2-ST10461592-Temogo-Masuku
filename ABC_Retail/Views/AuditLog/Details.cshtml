@@ -1,0 +1,58 @@
+﻿@model ABC_Retail.Models.AuditLog
+
+@{
+    ViewData["Title"] = "Audit Log Details";
+}
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h1>Audit Log Details</h1>
+                <a asp-action="Index" class="btn btn-outline-secondary">Back to List</a>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">Message Information</h5>
+                </div>
+                <div class="card-body">
+                    <dl class="row">
+                        <dt class="col-sm-3">Message ID</dt>
+                        <dd class="col-sm-9">
+                            <code>@(Model.MessageId ?? "N/A")</code>
+                        </dd>
+
+                        <dt class="col-sm-3">Insertion Time</dt>
+                        <dd class="col-sm-9">
+                            @if (Model.InsertionTime.HasValue)
+                            {
+                                <span>@Model.InsertionTime.Value.ToString("yyyy-MM-dd HH:mm:ss")</span>
+                                <br />
+                                <small class="text-muted">@Model.InsertionTime.Value.ToString("dddd, MMMM dd, yyyy")</small>
+                            }
+                            else
+                            {
+                                <span class="text-muted">N/A</span>
+                            }
+                        </dd>
+
+                        <dt class="col-sm-3">Message Content</dt>
+                        <dd class="col-sm-9">
+                            @if (!string.IsNullOrEmpty(Model.MessageText))
+                            {
+                                <div class="alert alert-light">
+                                    <pre class="mb-0" style="white-space: pre-wrap; word-wrap: break-word;">@Model.MessageText</pre>
+                                </div>
+                            }
+                            else
+                            {
+                                <span class="text-muted">No message content available</span>
+                            }
+                        </dd>
+                    </dl>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

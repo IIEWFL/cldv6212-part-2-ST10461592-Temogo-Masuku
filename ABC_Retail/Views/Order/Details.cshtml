@@ -1,0 +1,109 @@
+﻿@model ABC_Retail.Models.Order
+
+@{
+    ViewData["Title"] = "Order Details";
+}
+
+<h1>Order Details</h1>
+
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        <i class="bi bi-check-circle-fill me-2"></i>
+        @TempData["Success"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <i class="bi bi-exclamation-triangle-fill me-2"></i>
+        @TempData["Error"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+
+<div class="card">
+    <div class="card-header">
+        <h4 class="mb-0">Order Information</h4>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-6">
+                <dl class="row">
+                    <dt class="col-sm-4">@Html.DisplayNameFor(model => model.PartitionKey)</dt>
+                    <dd class="col-sm-8">@Html.DisplayFor(model => model.PartitionKey)</dd>
+
+                    <dt class="col-sm-4">@Html.DisplayNameFor(model => model.RowKey)</dt>
+                    <dd class="col-sm-8">@Html.DisplayFor(model => model.RowKey)</dd>
+
+                    <dt class="col-sm-4">@Html.DisplayNameFor(model => model.Timestamp)</dt>
+                    <dd class="col-sm-8">@Html.DisplayFor(model => model.Timestamp)</dd>
+
+                    <dt class="col-sm-4">@Html.DisplayNameFor(model => model.OrderDate)</dt>
+                    <dd class="col-sm-8">@Html.DisplayFor(model => model.OrderDate)</dd>
+
+                    <dt class="col-sm-4">@Html.DisplayNameFor(model => model.OrderStatus)</dt>
+                    <dd class="col-sm-8">
+                        <span class="badge @(Model.OrderStatus == "Delivered" ? "bg-success" :
+                                                                           Model.OrderStatus == "Pending" ? "bg-warning" :
+                                                                           Model.OrderStatus == "Cancelled" ? "bg-danger" :
+                                                                           Model.OrderStatus == "Processing" ? "bg-info" : "bg-secondary")">
+                            @Html.DisplayFor(model => model.OrderStatus)
+                        </span>
+                    </dd>
+                </dl>
+            </div>
+            <div class="col-md-6">
+                <dl class="row">
+                    <dt class="col-sm-4">Customer</dt>
+                    <dd class="col-sm-8">
+                        @if (ViewBag.Customer != null)
+                        {
+                            <strong>@ViewBag.Customer.Name @ViewBag.Customer.Surname</strong>
+                            <br>
+                            <small class="text-muted">@ViewBag.Customer.Email</small>
+                        }
+                        else
+                        {
+                            <span class="text-muted">@Model.CustomerPartitionKey / @Model.CustomerRowKey</span>
+                        }
+                    </dd>
+
+                    <dt class="col-sm-4">Product</dt>
+                    <dd class="col-sm-8">
+                        @if (ViewBag.Product != null)
+                        {
+                            <strong>@ViewBag.Product.ProductName</strong>
+                            <br>
+                            <small class="text-muted">R@ViewBag.Product.Price.ToString("F2")</small>
+                        }
+                        else
+                        {
+                            <span class="text-muted">@Model.ProductPartitionKey / @Model.ProductRowKey</span>
+                        }
+                    </dd>
+
+                    <dt class="col-sm-4">@Html.DisplayNameFor(model => model.Quantity)</dt>
+                    <dd class="col-sm-8">@Html.DisplayFor(model => model.Quantity)</dd>
+
+                    <dt class="col-sm-4">@Html.DisplayNameFor(model => model.TotalAmount)</dt>
+                    <dd class="col-sm-8">R@Model.TotalAmount.ToString("F2")</dd>
+                </dl>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="mt-3">
+    <a asp-action="Edit" asp-route-partitionKey="@Model.PartitionKey" asp-route-rowKey="@Model.RowKey" class="btn btn-primary">
+        <i class="bi bi-pencil"></i> Edit
+    </a>
+    <a asp-action="Delete" asp-route-partitionKey="@Model.PartitionKey" asp-route-rowKey="@Model.RowKey" class="btn btn-danger">
+        <i class="bi bi-trash"></i> Delete
+    </a>
+    <a asp-action="Index" class="btn btn-secondary">
+        <i class="bi bi-arrow-left"></i> Back to List
+    </a>
+</div>

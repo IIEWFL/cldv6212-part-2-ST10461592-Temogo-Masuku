@@ -1,0 +1,28 @@
+﻿@model ABC_Retail.Models.Product
+
+@{
+    ViewData["Title"] = "Product Details";
+}
+
+<h1>Product Details</h1>
+
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success">@TempData["Success"]</div>
+}
+
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger">@TempData["Error"]</div>
+}
+
+<div>
+    <h2>@Model.ProductName</h2>
+    <img src="@Model.ProductPhotoUrl" alt="Product Photo" style="width: 200px; height: auto;" />
+    <p><strong>Description:</strong> @Model.Description</p>
+    <p><strong>Price:</strong> @Model.Price.ToString("C")</p>
+    <p><strong>Category:</strong> @Model.Category</p>
+</div>
+
+<a class="btn btn-secondary" asp-action="Edit" asp-route-partitionKey="@Model.PartitionKey" asp-route-rowKey="@Model.RowKey">Edit</a>
+<a class="btn btn-primary" asp-action="Index">Back to List</a>

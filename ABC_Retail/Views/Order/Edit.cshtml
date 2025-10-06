@@ -1,0 +1,103 @@
+﻿@model ABC_Retail.Models.Order
+
+@{
+    ViewData["Title"] = "Edit Order";
+}
+
+<h1>Edit Order</h1>
+
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        <i class="bi bi-check-circle-fill me-2"></i>
+        @TempData["Success"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <i class="bi bi-exclamation-triangle-fill me-2"></i>
+        @TempData["Error"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+
+<hr />
+<div class="row">
+    <div class="col-md-8">
+        <form asp-action="Edit" method="post">
+            @Html.AntiForgeryToken()
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            <!-- Hidden fields for keys and timestamp -->
+            <input type="hidden" asp-for="PartitionKey" />
+            <input type="hidden" asp-for="RowKey" />
+            <input type="hidden" asp-for="Timestamp" />
+            <input type="hidden" asp-for="ETag" />
+            <input type="hidden" asp-for="CustomerRowKey" />
+            <input type="hidden" asp-for="ProductRowKey" />
+
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <label class="form-label">Partition Key</label>
+                    <input value="@Model.PartitionKey" class="form-control" readonly />
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">Row Key</label>
+                    <input value="@Model.RowKey" class="form-control" readonly />
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <label for="CustomerPartitionKey" class="form-label">Customer</label>
+                    <select asp-for="CustomerPartitionKey" class="form-select" asp-items="ViewBag.CustomerList">
+                        <option value="">-- Select Customer --</option>
+                    </select>
+                    <span asp-validation-for="CustomerPartitionKey" class="text-danger"></span>
+                </div>
+                <div class="col-md-6">
+                    <label for="ProductPartitionKey" class="form-label">Product</label>
+                    <select asp-for="ProductPartitionKey" class="form-select" asp-items="ViewBag.ProductList">
+                        <option value="">-- Select Product --</option>
+                    </select>
+                    <span asp-validation-for="ProductPartitionKey" class="text-danger"></span>
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <div class="col-md-4">
+                    <label asp-for="Quantity" class="form-label">Quantity</label>
+                    <input asp-for="Quantity" class="form-control" type="number" min="1" />
+                    <span asp-validation-for="Quantity" class="text-danger"></span>
+                </div>
+                <div class="col-md-4">
+                    <label asp-for="OrderDate" class="form-label">Order Date</label>
+                    <input asp-for="OrderDate" class="form-control" type="datetime-local" />
+                    <span asp-validation-for="OrderDate" class="text-danger"></span>
+                </div>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="OrderStatus" class="form-label">Order Status</label>
+                <select asp-for="OrderStatus" class="form-select" asp-items="ViewBag.StatusList">
+                    <option value="">-- Select Status --</option>
+                </select>
+                <span asp-validation-for="OrderStatus" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <input type="submit" value="Save Changes" class="btn btn-primary" />
+                <a asp-action="Index" class="btn btn-secondary">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
