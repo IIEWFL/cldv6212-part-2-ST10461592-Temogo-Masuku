@@ -1,8 +1,14 @@
-﻿using Azure;
+﻿#nullable enable
+using Azure;
 using Azure.Data.Tables;
+using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-namespace ABC_Retail.Models
+namespace ABCRetailFunctions.Models
 {
     public class Product : ITableEntity
     {
@@ -15,7 +21,7 @@ namespace ABC_Retail.Models
         public string ProductName { get; set; } = string.Empty;
         public string? Description { get; set; }
         public double Price { get; set; }
-        public string? ProductPhotoUrl { get; set; }  
+        public string? ProductPhotoUrl { get; set; }  // Product image
         public string? Category { get; set; }
     }
 }

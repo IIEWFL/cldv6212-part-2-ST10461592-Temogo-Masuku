@@ -80,7 +80,7 @@ namespace ABC_Retail.Controllers
         // Create order - POST
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(string CustomerPartitionKey, string ProductPartitionKey, int Quantity, DateTime OrderDate, decimal TotalAmount)
+        public async Task<IActionResult> Create(string CustomerPartitionKey, string ProductPartitionKey, int Quantity, DateTime OrderDate)
         {
             try
             {
@@ -110,6 +110,18 @@ namespace ABC_Retail.Controllers
                     return View(new Order { Quantity = Quantity, OrderDate = OrderDate });
                 }
 
+                // Get product to calculate total amount
+                var product = await _functionService.GetProductAsync(productKeys[0], productKeys[1]);
+                if (product == null)
+                {
+                    ModelState.AddModelError("", "Selected product not found.");
+                    await PopulateDropdowns();
+                    return View(new Order { Quantity = Quantity, OrderDate = OrderDate });
+                }
+
+                // Calculate total amount
+                decimal totalAmount = (decimal)product.Price * Quantity;
+
                 // Create order object
                 var order = new Order
                 {
@@ -119,11 +131,11 @@ namespace ABC_Retail.Controllers
                     ProductRowKey = productKeys[1],
                     Quantity = Quantity,
                     OrderDate = OrderDate,
-                    TotalAmount = TotalAmount,
+                    TotalAmount = totalAmount,
                     OrderStatus = "Pending"
                 };
 
-                // Create order via Azure Function - now returns bool
+                // Create order via Azure Function
                 var success = await _functionService.CreateOrderAsync(order);
 
                 if (success)
@@ -145,7 +157,6 @@ namespace ABC_Retail.Controllers
                 return View(new Order { Quantity = Quantity, OrderDate = OrderDate });
             }
         }
-
         // Edit order - GET
         [HttpGet]
         public async Task<IActionResult> Edit(string partitionKey, string rowKey)

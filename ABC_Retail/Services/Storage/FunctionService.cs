@@ -80,7 +80,7 @@ namespace ABC_Retail.Services.Storage
 
         public async Task<bool> DeleteCustomerAsync(string partitionKey, string rowKey)
         {
-            var response = await _httpClient.DeleteAsync($"{_functionBaseUrl}/api/customers/{partitionKey}/{rowKey}"); // Fixed from "students" to "customers"
+            var response = await _httpClient.DeleteAsync($"{_functionBaseUrl}/api/customers/{partitionKey}/{rowKey}"); 
             return response.IsSuccessStatusCode;
         }
 
