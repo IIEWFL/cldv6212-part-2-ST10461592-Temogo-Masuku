@@ -1,0 +1,9 @@
+bin/
+obj/
+out/
+appsettings.json
+appsettings.*.json
+local.settings.json
+*.suo
+*.user
+.vs/
